@@ -77,6 +77,38 @@ export class AutoEarsDemoStack extends cdk.Stack {
     tasksApi.addRoutes({ path: '/tasks/{id}', methods: [apigwv2.HttpMethod.PUT], integration: tasksIntegration });
     tasksApi.addRoutes({ path: '/tasks/{id}', methods: [apigwv2.HttpMethod.DELETE], integration: tasksIntegration });
 
+    // DynamoDB - Notifications table
+    const notificationsTable = new dynamodb.Table(this, 'NotificationsTable', {
+      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
+
+    // Lambda - Notifications
+    const notificationsLambda = new lambda.Function(this, 'NotificationsFunction', {
+      runtime: lambda.Runtime.NODEJS_18_X,
+      handler: 'handler.handler',
+      code: lambda.Code.fromAsset('../services/notifications'),
+      environment: {
+        NOTIFICATIONS_TABLE: notificationsTable.tableName,
+      },
+    });
+
+    // Grant DynamoDB permissions
+    notificationsTable.grantReadWriteData(notificationsLambda);
+
+    // HTTP API - Notifications
+    const notificationsIntegration = new HttpLambdaIntegration('NotificationsIntegration', notificationsLambda);
+    const notificationsApi = new apigwv2.HttpApi(this, 'NotificationsApi', {
+      apiName: 'notifications-api',
+    });
+
+    notificationsApi.addRoutes({ path: '/notifications', methods: [apigwv2.HttpMethod.GET], integration: notificationsIntegration });
+    notificationsApi.addRoutes({ path: '/notifications/{id}', methods: [apigwv2.HttpMethod.GET], integration: notificationsIntegration });
+    notificationsApi.addRoutes({ path: '/notifications', methods: [apigwv2.HttpMethod.POST], integration: notificationsIntegration });
+    notificationsApi.addRoutes({ path: '/notifications/{id}', methods: [apigwv2.HttpMethod.PUT], integration: notificationsIntegration });
+    notificationsApi.addRoutes({ path: '/notifications/{id}', methods: [apigwv2.HttpMethod.DELETE], integration: notificationsIntegration });
+
     // Outputs
     new cdk.CfnOutput(this, 'UsersApiUrl', {
       value: usersApi.url ?? '',
@@ -86,6 +118,11 @@ export class AutoEarsDemoStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'TasksApiUrl', {
       value: tasksApi.url ?? '',
       description: 'Tasks API URL',
+    });
+
+    new cdk.CfnOutput(this, 'NotificationsApiUrl', {
+      value: notificationsApi.url ?? '',
+      description: 'Notifications API URL',
     });
   }
 }

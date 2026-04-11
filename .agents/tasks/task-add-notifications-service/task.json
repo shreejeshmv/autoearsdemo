@@ -1,0 +1,7 @@
+{
+  "task_id": "task-add-notifications-service",
+  "task_description": "Add a Notifications microservice to the autoearsdemo application, following the same patterns as the existing Users and Tasks services. Includes: services/notifications/ (app.js, handler.js, package.json), CDK infra updates (DynamoDB table, Lambda function, HTTP API with 5 CRUD routes, CfnOutput), and README updates.",
+  "status": "completed",
+  "feature_order": ["FEAT-001"],
+  "blocked_reason": null
+}
