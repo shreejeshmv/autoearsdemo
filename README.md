@@ -5,14 +5,16 @@ Two-service microservices application built with Node.js/Express on AWS Lambda, 
 ## Architecture
 
 ```
-                        ┌─────────────────────────────────────────┐
-                        │              AWS Cloud                   │
-                        │                                          │
-  Client ──► API GW ──► │  Lambda (Users)  ──► DynamoDB (Users)   │
-             HTTP API   │                                          │
-                        │  Lambda (Tasks)  ──► DynamoDB (Tasks)   │
-             HTTP API ──► │                                          │
-                        └─────────────────────────────────────────┘
+                        ┌─────────────────────────────────────────────────────────┐
+                        │                        AWS Cloud                         │
+                        │                                                          │
+  Client ──► API GW ──► │  Lambda (Users)          ──► DynamoDB (Users)           │
+             HTTP API   │                                                          │
+                        │  Lambda (Tasks)          ──► DynamoDB (Tasks)           │
+             HTTP API ──► │                                                          │
+                        │  Lambda (Notifications)  ──► DynamoDB (Notifications)   │
+             HTTP API ──► │                                                          │
+                        └─────────────────────────────────────────────────────────┘
 ```
 
 ## Project Structure
@@ -24,7 +26,11 @@ autoearsdemo/
 │   │   ├── app.js          # Express app with CRUD routes
 │   │   ├── handler.js      # Lambda entry point
 │   │   └── package.json
-│   └── tasks/
+│   ├── tasks/
+│   │   ├── app.js          # Express app with CRUD routes
+│   │   ├── handler.js      # Lambda entry point
+│   │   └── package.json
+│   └── notifications/
 │       ├── app.js          # Express app with CRUD routes
 │       ├── handler.js      # Lambda entry point
 │       └── package.json
@@ -71,6 +77,22 @@ Required fields on POST: `title`, `userId`
 
 Filter by user: `GET /tasks?userId=<userId>`
 
+## Notifications API Endpoints
+
+| Method | Path                  | Description                                         | Status Codes        |
+|--------|-----------------------|-----------------------------------------------------|---------------------|
+| GET    | /notifications        | List all notifications (supports `?userId=` filter) | 200                 |
+| GET    | /notifications/:id    | Get notification by ID                              | 200, 404            |
+| POST   | /notifications        | Create a notification                               | 201, 400            |
+| PUT    | /notifications/:id    | Update a notification                               | 200, 404            |
+| DELETE | /notifications/:id    | Delete a notification                               | 204, 404            |
+
+Notification schema: `{ id, userId, message, read, createdAt }`
+
+Required fields on POST: `userId`, `message`
+
+Filter by user: `GET /notifications?userId=<userId>`
+
 ## Prerequisites
 
 - Node.js 18+
@@ -84,6 +106,7 @@ Filter by user: `GET /tasks?userId=<userId>`
 ```bash
 cd services/users && npm install
 cd ../tasks && npm install
+cd ../notifications && npm install
 ```
 
 2. Install and build CDK infrastructure:
@@ -110,9 +133,10 @@ The deployment outputs the API URLs for both services.
 
 ## Environment Variables
 
-| Variable    | Service | Description                        |
-|-------------|---------|------------------------------------|
-| USERS_TABLE | Users   | DynamoDB table name for users data |
-| TASKS_TABLE | Tasks   | DynamoDB table name for tasks data |
+| Variable             | Service       | Description                                    |
+|----------------------|---------------|------------------------------------------------|
+| USERS_TABLE          | Users         | DynamoDB table name for users data             |
+| TASKS_TABLE          | Tasks         | DynamoDB table name for tasks data             |
+| NOTIFICATIONS_TABLE  | Notifications | DynamoDB table name for notifications data     |
 
 These are automatically set by the CDK stack when deploying.
