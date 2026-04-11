@@ -1,0 +1,37 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Implement the AWS CDK infrastructure stack in TypeScript. Defines Lambda functions, HTTP API Gateways, and DynamoDB tables for both services with least-privilege IAM.",
+  "status": "completed",
+  "steps": [
+    "Create infra/package.json with devDependencies: aws-cdk-lib, constructs, typescript, ts-node, @types/node. Add scripts: build (tsc), cdk (cdk).",
+    "Create infra/tsconfig.json with standard CDK TypeScript config (target ES2020, module commonjs, strict true, outDir dist).",
+    "Create infra/cdk.json pointing to bin/app.ts as the app entry.",
+    "Create infra/bin/app.ts - CDK App entry point that instantiates AutoEarsDemoStack.",
+    "Create infra/lib/autoearsdemo-stack.ts with a single CDK Stack class containing:",
+    "  - DynamoDB Table for Users: partition key 'id' (STRING), billingMode PAY_PER_REQUEST, removalPolicy DESTROY for dev",
+    "  - DynamoDB Table for Tasks: partition key 'id' (STRING), billingMode PAY_PER_REQUEST, removalPolicy DESTROY for dev. Add GSI on 'userId' for filtering.",
+    "  - Lambda Function for Users: runtime NODEJS_18_X, handler 'handler.handler', code from '../services/users', env var USERS_TABLE pointing to users table name",
+    "  - Lambda Function for Tasks: runtime NODEJS_18_X, handler 'handler.handler', code from '../services/tasks', env var TASKS_TABLE pointing to tasks table name",
+    "  - Grant usersTable.grantReadWriteData(usersLambda) and tasksTable.grantReadWriteData(tasksLambda) for least-privilege IAM",
+    "  - HttpApi for Users: add routes integrating all 5 CRUD paths to usersLambda via HttpLambdaIntegration",
+    "  - HttpApi for Tasks: add routes integrating all 5 CRUD paths to tasksLambda via HttpLambdaIntegration",
+    "  - CfnOutput for both API Gateway URLs",
+    "Use imports from 'aws-cdk-lib', 'aws-cdk-lib/aws-lambda', 'aws-cdk-lib/aws-dynamodb', '@aws-cdk/aws-apigatewayv2-alpha' (or aws-cdk-lib/aws-apigatewayv2 if using stable), 'aws-cdk-lib/aws-apigatewayv2-integrations'."
+  ],
+  "acceptance_criteria": [
+    "infra/package.json exists with aws-cdk-lib and constructs as dependencies",
+    "infra/cdk.json exists and points to the correct app entry",
+    "infra/lib/autoearsdemo-stack.ts defines both DynamoDB tables, both Lambda functions, both API Gateways, and grants least-privilege IAM",
+    "CDK stack uses HttpApi (HTTP API v2) not RestApi",
+    "GSI on Tasks table for userId-based queries",
+    "CfnOutput for both API URLs"
+  ],
+  "verification": [
+    "Read infra/lib/autoearsdemo-stack.ts and confirm all constructs are defined",
+    "Read infra/package.json and confirm aws-cdk-lib is listed",
+    "Read infra/cdk.json and confirm app entry is correct"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

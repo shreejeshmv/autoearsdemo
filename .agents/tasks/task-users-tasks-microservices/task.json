@@ -1,0 +1,7 @@
+{
+  "task_id": "task-users-tasks-microservices",
+  "task_description": "Build a two-service microservices application (Users + Tasks) with Node.js/Express Lambda handlers and AWS CDK infrastructure (Lambda + API Gateway + DynamoDB).",
+  "status": "completed",
+  "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003", "FEAT-004"],
+  "blocked_reason": null
+}

@@ -1,0 +1,27 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Implement the Tasks microservice as a Node.js Express app wrapped for AWS Lambda. Includes full CRUD REST API, DynamoDB integration, userId reference for task ownership, and package.json.",
+  "status": "completed",
+  "steps": [
+    "Create services/tasks/package.json with same dependencies as users service: express, @vendia/serverless-express, @aws-sdk/client-dynamodb, @aws-sdk/lib-dynamodb",
+    "Create services/tasks/app.js - Express app with routes: GET /tasks, GET /tasks/:id, POST /tasks, PUT /tasks/:id, DELETE /tasks/:id. Task schema: { id (uuid), title, description, status (enum: 'pending'|'in_progress'|'done'), userId, createdAt }. Table name from env var TASKS_TABLE.",
+    "Add GET /tasks?userId=xxx query param support to filter tasks by userId.",
+    "Create services/tasks/handler.js - Lambda entry point wrapping app.js with @vendia/serverless-express.",
+    "Return proper HTTP status codes matching the users service conventions. Validate required fields: title and userId on POST."
+  ],
+  "acceptance_criteria": [
+    "services/tasks/package.json exists with all required dependencies",
+    "services/tasks/app.js exports an Express app with all 5 CRUD routes plus userId filter on GET /tasks",
+    "services/tasks/handler.js exports a Lambda-compatible handler",
+    "Task schema includes userId field linking to a user",
+    "No placeholder TODOs remain in core logic"
+  ],
+  "verification": [
+    "Read services/tasks/handler.js and confirm Lambda handler export",
+    "Read services/tasks/app.js and confirm all routes including userId filter are implemented",
+    "Read services/tasks/package.json and confirm dependencies"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

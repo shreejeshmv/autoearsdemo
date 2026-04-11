@@ -1,0 +1,27 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Implement the Users microservice as a Node.js Express app wrapped for AWS Lambda. Includes full CRUD REST API, DynamoDB integration via AWS SDK v3, and package.json.",
+  "status": "completed",
+  "steps": [
+    "Create services/users/package.json with dependencies: express, @vendia/serverless-express, @aws-sdk/client-dynamodb, @aws-sdk/lib-dynamodb",
+    "Create services/users/app.js - Express app with routes: GET /users, GET /users/:id, POST /users, PUT /users/:id, DELETE /users/:id. Each route uses DynamoDB DocumentClient (table name from env var USERS_TABLE). User schema: { id (uuid), name, email, createdAt }.",
+    "Create services/users/handler.js - Lambda entry point that imports app.js and wraps it with @vendia/serverless-express. Export handler function.",
+    "Use crypto.randomUUID() for id generation (Node 18+ built-in, no extra dep needed).",
+    "Return proper HTTP status codes: 200 for GET/PUT, 201 for POST, 204 for DELETE, 404 when not found, 400 for missing required fields."
+  ],
+  "acceptance_criteria": [
+    "services/users/package.json exists with all required dependencies listed",
+    "services/users/app.js exports an Express app with all 5 CRUD routes",
+    "services/users/handler.js exports a Lambda-compatible handler function",
+    "All routes interact with DynamoDB using AWS SDK v3 DocumentClient",
+    "No placeholder TODOs remain in core logic"
+  ],
+  "verification": [
+    "Read services/users/handler.js and confirm it exports a handler compatible with Lambda (exports.handler)",
+    "Read services/users/app.js and confirm all 5 routes are implemented with real DynamoDB logic",
+    "Read services/users/package.json and confirm @vendia/serverless-express and @aws-sdk/* deps are present"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

@@ -1,0 +1,29 @@
+{
+  "project_type": "Greenfield Node.js microservices with AWS CDK infrastructure",
+  "language": "JavaScript (Node.js) for services, TypeScript for CDK infra",
+  "build_system": "npm per service and infra directory; no build step needed for plain JS Lambda handlers",
+  "test_framework": "none required",
+  "build_command": "cd infra && npm run build (TypeScript CDK compile)",
+  "test_command": "none",
+  "verification_instructions": "Since network is INTEGRATIONS_ONLY, verification is code review only - confirm all files are present, package.json dependencies are correct, Lambda handlers export a valid handler, CDK stack synthesizes conceptually.",
+  "snapshot_or_generated_files": null,
+  "setup_instructions": "npm install in each of services/users, services/tasks, and infra (to be run by developer, not in sandbox)",
+  "environment_constraints": "INTEGRATIONS_ONLY - no npm install, no cdk deploy, no Docker, no AWS CLI calls. Write code only.",
+  "contribution_requirements": "none - greenfield project",
+  "key_patterns": "Lambda handler wraps Express app using aws-serverless-express or @vendia/serverless-express. DynamoDB access via AWS SDK v3 (@aws-sdk/client-dynamodb + @aws-sdk/lib-dynamodb). CDK uses aws-cdk-lib constructs. Each service is self-contained.",
+  "relevant_files": [
+    "services/users/index.js",
+    "services/users/handler.js",
+    "services/users/package.json",
+    "services/tasks/index.js",
+    "services/tasks/handler.js",
+    "services/tasks/package.json",
+    "infra/lib/autoearsdemo-stack.ts",
+    "infra/bin/app.ts",
+    "infra/package.json",
+    "infra/tsconfig.json",
+    "infra/cdk.json",
+    "README.md"
+  ],
+  "directory_structure": "services/users/ - Users Express REST API as Lambda handler; services/tasks/ - Tasks Express REST API as Lambda handler; infra/ - AWS CDK TypeScript stack defining Lambda + API GW + DynamoDB for both services"
+}

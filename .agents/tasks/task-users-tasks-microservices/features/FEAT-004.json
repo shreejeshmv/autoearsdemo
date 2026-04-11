@@ -1,0 +1,29 @@
+{
+  "id": "FEAT-004",
+  "type": "docs",
+  "description": "Write a comprehensive root-level README.md explaining the architecture, project structure, API endpoints, and deployment instructions.",
+  "status": "completed",
+  "steps": [
+    "Overwrite README.md with full documentation including:",
+    "  - Architecture overview: two Lambda-backed microservices behind API Gateway HTTP APIs, each with its own DynamoDB table",
+    "  - ASCII or text diagram of the architecture",
+    "  - Project structure tree",
+    "  - Users service API endpoints table (method, path, description)",
+    "  - Tasks service API endpoints table (method, path, description, notes on userId filter)",
+    "  - Prerequisites section: Node.js 18+, AWS CLI configured, AWS CDK v2 installed",
+    "  - Deployment steps: npm install in each service dir and infra dir, cd infra && cdk bootstrap && cdk deploy",
+    "  - Environment variables section explaining USERS_TABLE and TASKS_TABLE are set automatically by CDK",
+    "  - Local development note: services can be run locally with express but DynamoDB must be mocked or use DynamoDB Local"
+  ],
+  "acceptance_criteria": [
+    "README.md contains architecture overview",
+    "README.md lists all API endpoints for both services",
+    "README.md contains deployment instructions",
+    "README.md explains the project structure"
+  ],
+  "verification": [
+    "Read README.md and confirm all sections are present and complete"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
